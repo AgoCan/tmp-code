@@ -11,10 +11,12 @@ func NewServerCommand() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:  "cheetah",
 		Long: `Long describe.`,
-		RunE: func(cmd *cobra.Command, args []string) error {
-			return run(o)
+		Run: func(cmd *cobra.Command, args []string) {
+			cmd.Help()
 		},
+		DisableAutoGenTag: true,
 	}
+	cmd.CompletionOptions.HiddenDefaultCmd = true
 
 	versionCmd := &cobra.Command{
 		Use:   "version",
@@ -25,19 +27,38 @@ func NewServerCommand() *cobra.Command {
 	}
 	projectCmd := &cobra.Command{
 		Use:   "create",
-		Short: "Create [type] project.",
-		Long:  "Create [type] project. type is 'ansible'、'gitbook'、'mdbook'、'command'、'http'、'mvc'、'grpc'、'simple'.",
+		Short: "Create type project.",
+		Long:  "Create type project. type is 'ansible'、'gitbook'、'mdbook'、'command'、'http'、'mvc'、'grpc'、'simple'.",
 		Run: func(cmd *cobra.Command, args []string) {
-			if len(args) != 1 {
-				cmd.Println("Please specify the project item.")
-			}
+			cmd.Help()
 		},
 	}
-	projectCmd.Flags().StringVarP(&o.Name, "name", "n", "", "Project name.")
-	projectCmd.Flags().StringVarP(&o.Path, "path", "p", "", "Project path.")
-
 	cmd.AddCommand(versionCmd)
 	cmd.AddCommand(projectCmd)
+
+	projectCmd.PersistentFlags().StringVarP(&o.Name, "name", "n", "", "Project name.")
+	projectCmd.PersistentFlags().StringVarP(&o.Path, "path", "p", "", "Project path.")
+
+	ansibleCmd := &cobra.Command{
+		Use:   "ansible",
+		Short: "ansible project.",
+		RunE: func(cmd *cobra.Command, args []string) error {
+			o.Type = "ansible"
+			return run(o)
+		},
+	}
+
+	commandCmd := &cobra.Command{
+		Use:   "mvc",
+		Short: "mvc project.",
+		RunE: func(cmd *cobra.Command, args []string) error {
+			o.Type = "mvc"
+			return run(o)
+		},
+	}
+
+	projectCmd.AddCommand(ansibleCmd)
+	projectCmd.AddCommand(commandCmd)
 
 	return cmd
 }

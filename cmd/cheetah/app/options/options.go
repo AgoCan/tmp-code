@@ -7,6 +7,7 @@ import (
 type AppOptions struct {
 	Name string
 	Path string
+	Type string
 }
 
 func NewAppOptions() *AppOptions {
