@@ -39,28 +39,28 @@ func NewServerCommand() *cobra.Command {
 	projectCmd.PersistentFlags().StringVarP(&o.Name, "name", "n", "demo", "Project name.")
 	projectCmd.PersistentFlags().StringVarP(&o.Path, "path", "p", "./", "Project path.")
 
-	ansibleCmd := &cobra.Command{
-		Use:   "ansible",
-		Short: "ansible project.",
-		RunE: func(cmd *cobra.Command, args []string) error {
-			o.Type = "ansible"
-			return run(o)
-		},
-	}
-
-	commandCmd := &cobra.Command{
-		Use:   "mvc",
-		Short: "mvc project.",
-		RunE: func(cmd *cobra.Command, args []string) error {
-			o.Type = "mvc"
-			return run(o)
-		},
-	}
-
-	projectCmd.AddCommand(ansibleCmd)
-	projectCmd.AddCommand(commandCmd)
+	newCommand(o, projectCmd, "ansible")
+	newCommand(o, projectCmd, "mvc")
+	newCommand(o, projectCmd, "gitbook")
+	newCommand(o, projectCmd, "mdbook")
+	newCommand(o, projectCmd, "simple")
+	newCommand(o, projectCmd, "http")
+	newCommand(o, projectCmd, "command")
+	newCommand(o, projectCmd, "grpc")
 
 	return cmd
+}
+
+func newCommand(o *options.AppOptions, projectCmd *cobra.Command, typeName string) {
+	tmpCmd := &cobra.Command{
+		Use:   typeName,
+		Short: "Create " + typeName + " project.",
+		RunE: func(cmd *cobra.Command, args []string) error {
+			o.Type = typeName
+			return run(o)
+		},
+	}
+	projectCmd.AddCommand(tmpCmd)
 }
 
 func run(o *options.AppOptions) (err error) {
