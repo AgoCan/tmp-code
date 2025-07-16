@@ -36,8 +36,8 @@ func NewServerCommand() *cobra.Command {
 	cmd.AddCommand(versionCmd)
 	cmd.AddCommand(projectCmd)
 
-	projectCmd.PersistentFlags().StringVarP(&o.Name, "name", "n", "", "Project name.")
-	projectCmd.PersistentFlags().StringVarP(&o.Path, "path", "p", "", "Project path.")
+	projectCmd.PersistentFlags().StringVarP(&o.Name, "name", "n", "demo", "Project name.")
+	projectCmd.PersistentFlags().StringVarP(&o.Path, "path", "p", "./", "Project path.")
 
 	ansibleCmd := &cobra.Command{
 		Use:   "ansible",
